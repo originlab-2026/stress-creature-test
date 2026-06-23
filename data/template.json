@@ -1,0 +1,48 @@
+{
+  "quiz_name": "测试名称",
+  "reference": "测试理论基础",
+  "nbr_question": 30,
+  "nbr_question_scale": 25,
+  "nbr_question_choice": 5,
+  "nbr_dimension": 5,
+  "dimensions": [
+    {
+      "dimension_id": "dimension_1",
+      "dimension_name": "维度一名称",
+      "description": "维度一的描述说明"
+    },
+    {
+      "dimension_id": "dimension_2",
+      "dimension_name": "维度二名称",
+      "description": "维度二的描述说明"
+    }
+  ],
+  "scale_questions": [
+    {
+      "question_id": "scale_001",
+      "dimension_id": "dimension_1",
+      "question_text": "量表题题目内容（计分规则：非常不同意=1, 不同意=2, 中立=3, 同意=4, 非常同意=5）"
+    },
+    {
+      "question_id": "scale_002",
+      "dimension_id": "dimension_2",
+      "question_text": "另一个量表题题目内容"
+    }
+  ],
+  "choice_questions": [
+    {
+      "question_id": "choice_001",
+      "question_text": "情境选择题题干",
+      "option_a_text": "选项A文本",
+      "option_a_dim": "dimension_1",
+      "option_b_text": "选项B文本",
+      "option_b_dim": "dimension_2",
+      "option_c_text": "选项C文本",
+      "option_c_dim": "dimension_1",
+      "option_d_text": "选项D文本（可选）",
+      "option_d_dim": "dimension_2",
+      "option_e_text": "选项E文本（可选）",
+      "option_e_dim": "dimension_1"
+    }
+  ]
+}

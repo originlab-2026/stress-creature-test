@@ -1,0 +1,315 @@
+{
+  "quiz_id": "stress-creature",
+  "quiz_name": "你的压力是哪种神秘生物",
+  "reference": "基于压力心理学的「情绪外化」理论，将无形的压力具象为8种神秘生物",
+  "nbr_question": 30,
+  "nbr_question_scale": 25,
+  "nbr_question_choice": 5,
+  "nbr_dimension": 5,
+  "gender_enabled": false,
+  "dimensions": [
+    {
+      "dimension_id": "A",
+      "dimension_name": "身体反应值",
+      "description": "压力以生理方式呈现（失眠、头痛、胃痛、疲劳感）"
+    },
+    {
+      "dimension_id": "B",
+      "dimension_name": "情绪波动值",
+      "description": "压力导致情绪不稳定（易怒、焦虑、低落、哭泣）"
+    },
+    {
+      "dimension_id": "C",
+      "dimension_name": "逃避倾向值",
+      "description": "压力引发回避行为（拖延、不想见人、想躲起来）"
+    },
+    {
+      "dimension_id": "D",
+      "dimension_name": "控制欲值",
+      "description": "压力表现为过度掌控（反复检查、计划狂、无法放松）"
+    },
+    {
+      "dimension_id": "E",
+      "dimension_name": "自我否定值",
+      "description": "压力转化为自我攻击（我不够好、都是我的错）"
+    }
+  ],
+  "scale_questions": [
+    {
+      "question_id": "scale_A01",
+      "dimension_id": "A",
+      "question_text": "压力大的时候，我会失眠或睡不踏实。"
+    },
+    {
+      "question_id": "scale_A02",
+      "dimension_id": "A",
+      "question_text": "我一紧张就容易头痛、胃痛或身体某个部位不舒服。"
+    },
+    {
+      "question_id": "scale_A03",
+      "dimension_id": "A",
+      "question_text": "即使休息了很久，我还是会觉得浑身没劲。"
+    },
+    {
+      "question_id": "scale_A04",
+      "dimension_id": "A",
+      "question_text": "压力会让我食欲明显变化（吃不下或暴食）。"
+    },
+    {
+      "question_id": "scale_A05",
+      "dimension_id": "A",
+      "question_text": "压力对我的身体几乎没有影响，我吃得下睡得着。",
+      "reverse": true
+    },
+    {
+      "question_id": "scale_B01",
+      "dimension_id": "B",
+      "question_text": "压力大时，我会因为小事就发脾气。"
+    },
+    {
+      "question_id": "scale_B02",
+      "dimension_id": "B",
+      "question_text": "我会莫名其妙地想哭，自己也说不清原因。"
+    },
+    {
+      "question_id": "scale_B03",
+      "dimension_id": "B",
+      "question_text": "压力让我变得非常焦虑，坐立不安。"
+    },
+    {
+      "question_id": "scale_B04",
+      "dimension_id": "B",
+      "question_text": "我的情绪像过山车，一会儿好一会儿坏。"
+    },
+    {
+      "question_id": "scale_B05",
+      "dimension_id": "B",
+      "question_text": "即使压力很大，我大多数时候还是能保持情绪平稳。",
+      "reverse": true
+    },
+    {
+      "question_id": "scale_C01",
+      "dimension_id": "C",
+      "question_text": "压力大的时候，我不想见任何人。"
+    },
+    {
+      "question_id": "scale_C02",
+      "dimension_id": "C",
+      "question_text": "我会拖延重要的事情，越拖越焦虑。"
+    },
+    {
+      "question_id": "scale_C03",
+      "dimension_id": "C",
+      "question_text": "我幻想过「如果消失就好了」或者「找个没人的地方躲起来」。"
+    },
+    {
+      "question_id": "scale_C04",
+      "dimension_id": "C",
+      "question_text": "压力让我想请假、翘课、取消所有安排。"
+    },
+    {
+      "question_id": "scale_C05",
+      "dimension_id": "C",
+      "question_text": "压力越大，我越会主动面对，而不是逃避。",
+      "reverse": true
+    },
+    {
+      "question_id": "scale_D01",
+      "dimension_id": "D",
+      "question_text": "我会反复检查同一件事，怕出问题。"
+    },
+    {
+      "question_id": "scale_D02",
+      "dimension_id": "D",
+      "question_text": "我讨厌计划被打乱，会因此非常烦躁。"
+    },
+    {
+      "question_id": "scale_D03",
+      "dimension_id": "D",
+      "question_text": "即使已经很好了，我还是觉得不够完美。"
+    },
+    {
+      "question_id": "scale_D04",
+      "dimension_id": "D",
+      "question_text": "压力让我想掌控身边的一切，包括别人。"
+    },
+    {
+      "question_id": "scale_D05",
+      "dimension_id": "D",
+      "question_text": "我能接受事情不按计划发展，顺其自然就好。",
+      "reverse": true
+    },
+    {
+      "question_id": "scale_E01",
+      "dimension_id": "E",
+      "question_text": "压力大的时候，我会觉得自己很没用。"
+    },
+    {
+      "question_id": "scale_E02",
+      "dimension_id": "E",
+      "question_text": "我会把问题的责任都归到自己身上。"
+    },
+    {
+      "question_id": "scale_E03",
+      "dimension_id": "E",
+      "question_text": "我经常拿自己和别人比，然后觉得自己不够好。"
+    },
+    {
+      "question_id": "scale_E04",
+      "dimension_id": "E",
+      "question_text": "即使别人觉得我做得不错，我还是会自我怀疑。"
+    },
+    {
+      "question_id": "scale_E05",
+      "dimension_id": "E",
+      "question_text": "压力来临时，我相信自己有能力应对。",
+      "reverse": true
+    }
+  ],
+  "choice_questions": [
+    {
+      "question_id": "choice_001",
+      "question_text": "当你感到压力时，身体最常出现的信号是什么？（最多选3项）",
+      "option_a_text": "失眠、睡不踏实",
+      "option_a_dim": "A",
+      "option_b_text": "心跳加速、手心出汗",
+      "option_b_dim": "B",
+      "option_c_text": "头痛、胃痛、肌肉紧绷",
+      "option_c_dim": "C",
+      "option_d_text": "暴食或吃不下东西",
+      "option_d_dim": "D",
+      "option_e_text": "疲惫感，怎么睡都睡不醒",
+      "option_e_dim": "E"
+    },
+    {
+      "question_id": "choice_002",
+      "question_text": "压力来袭时，你的情绪更像以下哪种？（最多选3项）",
+      "option_a_text": "一点就炸的火药桶",
+      "option_a_dim": "A",
+      "option_b_text": "随时会决堤的洪水（想哭）",
+      "option_b_dim": "B",
+      "option_c_text": "被困在笼子里的动物（焦虑、坐不住）",
+      "option_c_dim": "C",
+      "option_d_text": "一片灰蒙蒙的雾（麻木、无感）",
+      "option_d_dim": "D",
+      "option_e_text": "被压住的弹簧（表面平静，内心紧绷）",
+      "option_e_dim": "E"
+    },
+    {
+      "question_id": "choice_003",
+      "question_text": "压力大的时候，你的行为更接近以下哪种？（最多选3项）",
+      "option_a_text": "把自己关在房间里，不见任何人",
+      "option_a_dim": "A",
+      "option_b_text": "疯狂刷手机、打游戏、看剧来逃避",
+      "option_b_dim": "B",
+      "option_c_text": "反复检查、反复确认，停不下来",
+      "option_c_dim": "C",
+      "option_d_text": "对身边人发火，或者阴阳怪气",
+      "option_d_dim": "D",
+      "option_e_text": "暴饮暴食、疯狂购物、其他成瘾行为",
+      "option_e_dim": "E"
+    },
+    {
+      "question_id": "choice_004",
+      "question_text": "以下哪些想法会在你压力大时频繁出现？（最多选3项）",
+      "option_a_text": "「我是不是哪里做错了？」",
+      "option_a_dim": "A",
+      "option_b_text": "「为什么别人都行，就我不行？」",
+      "option_b_dim": "B",
+      "option_c_text": "「完了，肯定要搞砸了。」",
+      "option_c_dim": "C",
+      "option_d_text": "「我好想消失，谁都别来找我。」",
+      "option_d_dim": "D",
+      "option_e_text": "「再检查一遍，不能出任何差错。」",
+      "option_e_dim": "E"
+    },
+    {
+      "question_id": "choice_005",
+      "question_text": "你希望压力「滚开」的方式更接近以下哪种？（最多选3项）",
+      "option_a_text": "一个人静静，谁都别来烦我",
+      "option_a_dim": "A",
+      "option_b_text": "找个人倾诉，把情绪倒出来",
+      "option_b_dim": "B",
+      "option_c_text": "运动出汗，让身体先放松",
+      "option_c_dim": "C",
+      "option_d_text": "把所有事情列出来，一件件解决",
+      "option_d_dim": "D",
+      "option_e_text": "吃点好吃的、看点搞笑的，转移注意力",
+      "option_e_dim": "E"
+    }
+  ],
+  "result_types": [
+    {
+      "type_id": "hedgehog",
+      "type_name": "防御型依恋",
+      "creature_name": "蜷缩刺猬",
+      "keywords": ["防御", "脆弱"],
+      "short_desc": ["「别碰我，我会扎人」", "「其实我只是害怕」"],
+      "description": "它的尖刺不是武器，而是盔甲。当压力来临时，这只刺猬会立刻蜷缩成球，把所有柔软的部分藏起来，只露出让人不敢靠近的刺。它不信任任何人，觉得「只有自己才能保护自己」。但夜深人静时，它会悄悄伸出头，渴望有人能绕过尖刺、摸摸它的肚皮。",
+      "ideal_scores": { "A": 3.0, "B": 4.0, "C": 5.0, "D": 2.5, "E": 4.5 }
+    },
+    {
+      "type_id": "puffer",
+      "type_name": "紧绷型应激",
+      "creature_name": "膨胀河豚",
+      "keywords": ["紧绷", "易爆"],
+      "short_desc": ["「别再吹了，我快撑不住了」", "「一点就炸，炸完就瘪」"],
+      "description": "它的身体里装满了「应该」「必须」「不能出错」。每多一个要求，它就膨胀一圈。表面看起来很大很饱满，但随时可能「砰」的一声炸成碎片。炸完之后，它变成一块皱巴巴的橡胶皮，瘫在地上好久都鼓不起来。它最怕别人说「再加把劲」。",
+      "ideal_scores": { "A": 3.5, "B": 5.0, "C": 2.0, "D": 5.0, "E": 3.5 }
+    },
+    {
+      "type_id": "sloth",
+      "type_name": "耗竭型倦怠",
+      "creature_name": "慢吞吞树懒",
+      "keywords": ["拖延", "麻木"],
+      "short_desc": ["「等一下……再等一下……」", "「不是不想动，是动不了」"],
+      "description": "它不是懒，是太重了。压力像湿透的棉袄裹在它身上，每抬一次手都要消耗巨大的能量。它把「明天再做」挂在嘴边，但心里知道明天也不会做。它不焦虑、不暴躁，只是……没有任何感觉了。麻木是它的保护色，因为一旦有感觉，就会痛。",
+      "ideal_scores": { "A": 4.5, "B": 2.5, "C": 5.5, "D": 2.0, "E": 3.0 }
+    },
+    {
+      "type_id": "parrot",
+      "type_name": "反刍型焦虑",
+      "creature_name": "复读机鹦鹉",
+      "keywords": ["反刍", "焦虑"],
+      "short_desc": ["「万一……万一……万一……」", "「我知道不该想了，但我停不下来」"],
+      "description": "它的脑子里有一个坏掉的唱片机，永远在播放同一段旋律：「我是不是说错话了？」「会不会出问题？」「他们是不是讨厌我？」它知道这些想法没有用，但就是关不掉。越是告诉自己「别想了」，那只鹦鹉叫得越大声。",
+      "ideal_scores": { "A": 2.5, "B": 4.5, "C": 3.0, "D": 4.5, "E": 5.0 }
+    },
+    {
+      "type_id": "hermit_crab",
+      "type_name": "责任型超载",
+      "creature_name": "负重寄居蟹",
+      "keywords": ["责任", "疲惫"],
+      "short_desc": ["「我不能放下，这是我的责任」", "「好累，但没有人可以接替我」"],
+      "description": "它的贝壳不是天生的，是一块一块捡来的——别人的期待、家庭的责任、工作的KPI、朋友的求助。每多一块，它就多背一层。它不敢放下，怕让别人失望。贝壳已经裂了，但它还在爬。它最怕听到「你辛苦了」，因为那会让它想哭。",
+      "ideal_scores": { "A": 5.0, "B": 3.0, "C": 3.5, "D": 4.0, "E": 4.0 }
+    },
+    {
+      "type_id": "dragon",
+      "type_name": "外爆型愤怒",
+      "creature_name": "喷火小龙",
+      "keywords": ["易怒", "内耗"],
+      "short_desc": ["「别惹我，我在喷火」", "「其实烧得最痛的是我自己」"],
+      "description": "它的火焰看起来吓人，但每次都烧到自己。它对别人发火，然后后悔；它摔东西，然后心疼；它说狠话，然后失眠。它不是坏，是太累了——累到没有力气好好说话。它的愤怒下面，藏着一句不敢说出口的话：「帮帮我，我撑不住了。」",
+      "ideal_scores": { "A": 3.5, "B": 5.5, "C": 2.5, "D": 3.0, "E": 4.0 }
+    },
+    {
+      "type_id": "chameleon",
+      "type_name": "隐匿型回避",
+      "creature_name": "隐形变色龙",
+      "keywords": ["压抑", "消失"],
+      "short_desc": ["「看不见我、看不见我、看不见我」", "「我存在，但我选择不存在」"],
+      "description": "它的超能力是「让自己消失」。压力大的时候，它会变得透明，躲在最不起眼的角落，不发朋友圈、不回复消息、不参加聚会。它希望全世界都忘了自己。但深夜，它会恢复颜色，对着镜子问：「有人看到我了吗？」",
+      "ideal_scores": { "A": 3.0, "B": 3.5, "C": 5.0, "D": 2.0, "E": 4.5 }
+    },
+    {
+      "type_id": "octopus",
+      "type_name": "过载型混乱",
+      "creature_name": "碎碎念章鱼",
+      "keywords": ["过载", "混乱"],
+      "short_desc": ["「我在做A的时候在想B，在做B的时候担心C」", "「停下来？我没有这个选项」"],
+      "description": "它的八条腿同时在做八件事：回消息、写方案、订机票、刷朋友圈、想明天的会、担心父母的健康、纠结午饭吃什么、思考人生的意义。它看起来很高效，但其实每件事都只做了60分。它最怕安静，因为一安静，脑子里的声音会更吵。",
+      "ideal_scores": { "A": 4.0, "B": 4.0, "C": 2.5, "D": 5.0, "E": 3.5 }
+    }
+  ]
+}

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>答题 - 你的压力是哪种神秘生物</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preload" as="image" href="assets/progress bar/草地进度条.webp?v=5" type="image/webp">
+    <link rel="preload" as="image" href="assets/progress bar/进度条小猫1.webp?v=5" type="image/webp">
+    <script src="js/deploy-config.js"></script>
+</head>
+<body class="page-quiz">
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">压力神秘生物</a>
+            <ul class="nav-links">
+                <li><a href="javascript:void(0)" class="active" onclick="navigateWithFallback('catalog', this)">测试合集</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <main class="container">
+        <!-- 顶部信息栏 -->
+        <div style="background: white; border-radius: 16px; padding: 20px 24px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
+            <!-- 进度条 -->
+            <div style="padding-top: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <span style="font-size: 0.85rem; color: #888; font-weight: 500;">答题进度</span>
+                    <span style="font-size: 1rem; color: #C4956A; font-weight: 700;"><span id="current-num">1</span><span style="color: #ccc; margin: 0 3px;">/</span><span id="total-num" style="color: #999; font-weight: 500;">-</span></span>
+                </div>
+                <!-- 小猫走路进度条 -->
+                <div id="progress-container" style="position: relative; height: 15px; border-radius: 12px; overflow: visible; background: #e8f5e9; margin-top: 40px; padding-bottom: 36px; margin-bottom: 4px;">
+                    <!-- 草地背景 (预加载) -->
+                    <picture>
+                        <source srcset="assets/progress bar/草地进度条.webp?v=5" type="image/webp">
+                        <source srcset="assets/progress bar/草地进度条.png?v=5" type="image/png">
+                        <img src="assets/progress bar/草地进度条.png?v=5" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 12px; z-index: 5;" alt="草地" loading="eager" fetchpriority="high" decoding="async">
+                    </picture>
+                    <!-- 进度遮罩 -->
+                    <div id="progress-mask" style="position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: rgba(255,255,255,0.3); transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: 6; border-radius: 12px;"></div>
+                    <!-- 小猫 -->
+                    <div id="cat-walker" style="position: absolute; bottom: 0; transform: translateX(-50%); left: 0%; transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: 4;">
+                        <img id="cat-frame" src="assets/progress bar/进度条小猫1.webp?v=5" style="width: 40px; height: 40px; object-fit: contain; display: block;" alt="小猫" loading="eager" fetchpriority="high" decoding="async" onerror="this.onerror=null;this.src='assets/progress bar/进度条小猫1.png?v=5'">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 题目卡片 -->
+        <div class="card fade-in quiz-content-card">
+            <div id="question-container">
+                <!-- 动态生成题目 -->
+            </div>
+
+            <!-- 导航按钮 -->
+            <div class="nav-buttons quiz-nav-buttons">
+                <button type="button" class="btn btn-secondary" id="prev-btn" disabled>上一题</button>
+                <button type="button" class="btn btn-primary" id="next-btn" disabled>下一题</button>
+                <button type="button" class="btn btn-primary hidden" id="submit-btn">提交</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/utils.js"></script>
+    <script>
+        // 全局变量
+        let quizData = null;
+        let allQuestions = [];
+        let currentQuestionIndex = 0;
+        let answers = {};
+        let isTransitioning = false; // 防止重复点击标志
+        let questionOptionOrder = {}; // 保存每道题的选项随机顺序
+
+        // 打乱数组顺序（Fisher-Yates 算法）
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        const CHOICE_OPTION_LETTERS = new Set(['a', 'b', 'c', 'd', 'e']);
+
+        /** 选择题答案统一为小写选项字母数组；无法识别则 null */
+        function normalizeChoiceAnswerValue(raw) {
+            if (raw === undefined || raw === null) return null;
+            let arr = raw;
+            if (typeof arr === 'string' && arr.trim().length) {
+                arr = [arr];
+            }
+            if (!Array.isArray(arr)) return null;
+            const cleaned = [...new Set(
+                arr
+                    .map(v => (typeof v === 'string' ? v.trim().toLowerCase() : ''))
+                    .filter(v => CHOICE_OPTION_LETTERS.has(v))
+            )];
+            return cleaned.length > 0 ? cleaned : null;
+        }
+
+        /** 量表题：1–5；选择题：至少一项合法选项 */
+        function isQuestionAnswered(question) {
+            const answer = answers[question.question_id];
+            if (question.type === 'scale') {
+                const n = Number(answer);
+                return answer !== undefined && answer !== null && !Number.isNaN(n) && n >= 1 && n <= 5;
+            }
+            return normalizeChoiceAnswerValue(answer) !== null;
+        }
+
+        /** 从存储恢复后统一格式，避免旧数据格式导致无法判「已作答」 */
+        function normalizeStoredAnswers() {
+            for (const q of allQuestions) {
+                if (q.type === 'scale') {
+                    const v = answers[q.question_id];
+                    if (v === undefined || v === null) continue;
+                    const n = Number(v);
+                    if (!Number.isNaN(n) && n >= 1 && n <= 5) {
+                        answers[q.question_id] = n;
+                    } else {
+                        delete answers[q.question_id];
+                    }
+                    continue;
+                }
+                const v = answers[q.question_id];
+                const norm = normalizeChoiceAnswerValue(v);
+                if (norm === null) {
+                    delete answers[q.question_id];
+                } else {
+                    answers[q.question_id] = norm;
+                }
+            }
+        }
+
+        // 加载测试数据
+        async function loadQuizData() {
+            try {
+                quizData = StorageUtil.get(StorageKeys.QUIZ_DATA);
+
+                // 与「爱的解码」等共用 localStorage 时，缓存题库可能不是本测试，会导致 question_id 对不上、永远提示有题未作答
+                if (quizData && !isStressCreatureQuizData(quizData)) {
+                    console.warn('检测到非「压力神秘生物」题库缓存，已清空题库与答题进度');
+                    StorageUtil.remove(StorageKeys.QUIZ_DATA);
+                    StorageUtil.clearQuizProgress();
+                    quizData = null;
+                }
+
+                // 检查 localStorage 数据是否有效
+                if (quizData && (!quizData.scale_questions || !quizData.choice_questions)) {
+                    console.warn('localStorage 数据损坏，清除后重新加载');
+                    StorageUtil.remove(StorageKeys.QUIZ_DATA);
+                    quizData = null;
+                }
+                
+                if (!quizData) {
+                    // 使用相对路径加载数据
+                    const jsonUrl = resolveDeployPath('data/default-quiz.json');
+                    console.log('尝试加载:', jsonUrl);
+                    
+                    try {
+                        const response = await fetch(jsonUrl);
+                        if (response.ok) {
+                            quizData = await response.json();
+                            StorageUtil.set(StorageKeys.QUIZ_DATA, quizData);
+                            console.log('成功从服务器加载数据');
+                        } else {
+                            throw new Error('HTTP ' + response.status);
+                        }
+                    } catch (fetchError) {
+                        console.error('无法加载 JSON 文件:', fetchError);
+                        document.getElementById('question-container').innerHTML = `
+                            <div class="alert alert-error">
+                                <strong>加载测试数据失败</strong><br>
+                                无法访问: ${jsonUrl}<br>
+                                错误: ${fetchError.message}<br><br>
+                                当前页面URL: ${window.location.href}<br>
+                                请确保通过 http://localhost:8080 访问本站<br>
+                                <a href="index.html">返回首页</a>
+                            </div>
+                        `;
+                        return;
+                    }
+                }
+
+                // 再次检查数据完整性
+                if (!quizData || !quizData.scale_questions || !quizData.choice_questions) {
+                    throw new Error('Invalid quiz data structure');
+                }
+
+                // 打乱量表题和选择题各自的顺序，然后合并（量表题在前，选择题在后）
+                const shuffledScales = shuffleArray([...quizData.scale_questions]).map(q => ({ ...q, type: 'scale' }));
+                const shuffledChoices = shuffleArray([...quizData.choice_questions]).map(q => ({ ...q, type: 'choice' }));
+                allQuestions = [...shuffledScales, ...shuffledChoices];
+
+                // 恢复进度
+                const savedIndex = StorageUtil.get(StorageKeys.CURRENT_QUESTION, 0);
+                let savedAnswers = StorageUtil.get(StorageKeys.USER_ANSWERS, {});
+                const savedOptionOrder = StorageUtil.get('question_option_order', {});
+                currentQuestionIndex = Math.min(savedIndex, allQuestions.length - 1);
+                answers = savedAnswers && typeof savedAnswers === 'object' ? savedAnswers : {};
+                answers = pruneUserAnswersForQuiz(answers, quizData);
+                questionOptionOrder = savedOptionOrder;
+                normalizeStoredAnswers();
+                saveProgress();
+
+                // 更新总题数显示
+                document.getElementById('total-num').textContent = allQuestions.length;
+
+                // 显示当前题目
+                renderQuestion();
+                updateProgress();
+
+            } catch (error) {
+                console.error('加载测试数据失败:', error);
+                document.getElementById('question-container').innerHTML = `
+                    <div class="alert alert-error">
+                        加载测试数据失败，请<a href="index.html">返回首页</a>重试
+                    </div>
+                `;
+            }
+        }
+
+        // 渲染题目
+        function renderQuestion() {
+            const question = allQuestions[currentQuestionIndex];
+            const container = document.getElementById('question-container');
+
+            let html = `
+                <div class="fade-in">
+                    <span style="display: inline-block; padding: 4px 12px; background: var(--secondary-color); 
+                                 color: var(--primary-color); border-radius: 20px; font-size: 0.875rem; margin-bottom: 16px;">
+                        ${question.type === 'scale' ? '量表题' : '选择题'}
+                    </span>
+                    <h2 style="margin-bottom: 32px; font-size: 1.25rem; line-height: 1.6;">
+                        ${currentQuestionIndex + 1}. ${question.question_text}
+                    </h2>
+            `;
+
+            if (question.type === 'scale') {
+                // 量表题 - 5个选项（横向排列，无数字）
+                // 计分：1=完全不同意, 2=不同意, 3=中立, 4=同意, 5=完全同意
+                // 反向题在结果计算时处理（6-原始分），用户交互不受影响
+                const scaleLabels = ['完全不同意', '不同意', '中立', '同意', '完全同意'];
+                html += `<div class="scale-options" id="scale-options">`;
+                for (let i = 1; i <= 5; i++) {
+                    const selected = Number(answers[question.question_id]) === i ? 'selected' : '';
+                    html += `
+                        <div class="scale-btn scale-option ${selected}" data-value="${i}">
+                            <span style="font-size: 0.875rem; font-weight: 500; text-align: center; line-height: 1.3;">${scaleLabels[i-1]}</span>
+                        </div>
+                    `;
+                }
+                html += `</div>`;
+            } else {
+                // 选择题 - A-E 选项（多选，无勾选框，随机打乱）
+                let options = ['a', 'b', 'c', 'd', 'e'];
+                // 过滤掉没有文本或维度的选项
+                options = options.filter(opt => {
+                    const text = question[`option_${opt}_text`];
+                    const dim = question[`option_${opt}_dim`];
+                    return text && dim;
+                });
+                
+                // 如果这道题还没有随机顺序，则生成并保存
+                if (!questionOptionOrder[question.question_id]) {
+                    // Fisher-Yates 洗牌算法
+                    const shuffled = [...options];
+                    for (let i = shuffled.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                    }
+                    questionOptionOrder[question.question_id] = shuffled;
+                    StorageUtil.set('question_option_order', questionOptionOrder);
+                }
+                
+                // 使用保存的随机顺序
+                options = questionOptionOrder[question.question_id];
+                
+                // 获取当前已选答案（数组）
+                const currentAnswers = normalizeChoiceAnswerValue(answers[question.question_id]) || [];
+                html += `<div class="radio-group" id="choice-options">`;
+                html += `<p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 12px;">💡 可多选（最多3个）</p>`;
+                options.forEach((opt, idx) => {
+                    const text = question[`option_${opt}_text`];
+                    const selected = currentAnswers.includes(opt) ? 'selected' : '';
+                    html += `
+                        <div class="radio-item choice-option ${selected}" data-option="${opt}" style="cursor: pointer;">
+                            <span class="radio-label">${String.fromCharCode(65 + idx)}. ${text}</span>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            }
+
+            html += `</div>`;
+            container.innerHTML = html;
+
+            // 更新按钮状态
+            updateButtons();
+        }
+
+        // 选择量表题答案（单选，选择后自动跳转）
+        function selectScale(value) {
+            // 防止重复点击
+            if (isTransitioning) return;
+            
+            const question = allQuestions[currentQuestionIndex];
+            const isLast = currentQuestionIndex === allQuestions.length - 1;
+            
+            // 先更新数据
+            answers[question.question_id] = value;
+            saveProgress();
+            
+            // 直接更新当前选项的样式，不重新渲染整个题目
+            const options = document.querySelectorAll('.scale-option');
+            options.forEach((opt, idx) => {
+                if (idx + 1 === value) {
+                    opt.classList.add('selected');
+                } else {
+                    opt.classList.remove('selected');
+                }
+            });
+            updateButtons();
+            
+            // 量表题选择后自动跳转到下一题（如果不是最后一题）
+            if (!isLast) {
+                isTransitioning = true; // 设置标志，防止重复点击
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    saveProgress();
+                    renderQuestion();
+                    updateProgress();
+                    isTransitioning = false; // 重置标志
+                }, 400); // 延迟400ms让用户看到选择效果
+            } else {
+                // 最后一题，重新渲染以显示提交按钮
+                renderQuestion();
+            }
+        }
+
+        // 切换选择题答案（多选，点击切换选中状态，不自动跳转，最多选3个）
+        function toggleChoice(value) {
+            // 防止重复点击
+            if (isTransitioning) return;
+
+            const question = allQuestions[currentQuestionIndex];
+            const opt = typeof value === 'string' ? value.trim().toLowerCase() : '';
+            if (!CHOICE_OPTION_LETTERS.has(opt)) return;
+
+            let currentAnswers = normalizeChoiceAnswerValue(answers[question.question_id]) || [];
+
+            // 切换选中状态
+            const isSelected = currentAnswers.includes(opt);
+            if (isSelected) {
+                currentAnswers = currentAnswers.filter(v => v !== opt);
+            } else {
+                if (currentAnswers.length >= 3) {
+                    alert('最多只能选择3个选项');
+                    return;
+                }
+                currentAnswers.push(opt);
+            }
+
+            const norm = normalizeChoiceAnswerValue(currentAnswers);
+            if (norm === null) {
+                delete answers[question.question_id];
+            } else {
+                answers[question.question_id] = norm;
+            }
+            
+            saveProgress();
+            
+            // 直接更新当前选项的样式，不重新渲染整个题目
+            const clickedOption = document.querySelector(`.choice-option[data-option="${opt}"]`);
+            if (clickedOption) {
+                if (isSelected) {
+                    clickedOption.classList.remove('selected');
+                } else {
+                    clickedOption.classList.add('selected');
+                }
+            }
+            
+            updateButtons();
+            // 选择题不自动跳转，等待用户点击下一题按钮
+        }
+
+        // 保存进度
+        function saveProgress() {
+            StorageUtil.set(StorageKeys.USER_ANSWERS, answers);
+            StorageUtil.set(StorageKeys.CURRENT_QUESTION, currentQuestionIndex);
+            StorageUtil.set('question_option_order', questionOptionOrder);
+        }
+
+        // 小猫走路动画
+        const PROGRESS_ASSET_VERSION = '5';
+        const PROGRESS_BAR_BASE = 'assets/progress bar/';
+        function progressCatFrameSrc(frame, ext) {
+            return PROGRESS_BAR_BASE + '进度条小猫' + frame + '.' + ext + '?v=' + PROGRESS_ASSET_VERSION;
+        }
+        function progressCatPreferredExt() {
+            const c = document.createElement('canvas');
+            return c.toDataURL('image/webp').indexOf('data:image/webp') === 0 ? 'webp' : 'png';
+        }
+        const progressCatExt = progressCatPreferredExt();
+        let catAnimationInterval = null;
+        let currentCatFrame = 1;
+        const catImages = { 1: new Image(), 2: new Image() };
+        catImages[1].src = progressCatFrameSrc(1, progressCatExt);
+        catImages[2].src = progressCatFrameSrc(2, progressCatExt);
+        if (progressCatExt === 'webp') {
+            new Image().src = progressCatFrameSrc(2, 'png');
+        }
+                
+        function startCatAnimation() {
+            if (catAnimationInterval) return;
+            catAnimationInterval = setInterval(() => {
+                currentCatFrame = currentCatFrame === 1 ? 2 : 1;
+                const el = document.getElementById('cat-frame');
+                if (el) el.src = catImages[currentCatFrame].src;
+            }, 200);
+        }
+        
+        function stopCatAnimation() {
+            if (catAnimationInterval) {
+                clearInterval(catAnimationInterval);
+                catAnimationInterval = null;
+            }
+        }
+        
+        // 更新进度显示
+        function updateProgress() {
+            const progress = ((currentQuestionIndex + 1) / allQuestions.length) * 100;
+            const catPosition = Math.min(progress, 95); // 小猫最多走到95%，不要超出边界
+            document.getElementById('progress-mask').style.width = progress + '%';
+            document.getElementById('cat-walker').style.left = catPosition + '%';
+            document.getElementById('current-num').textContent = currentQuestionIndex + 1;
+        }
+
+        // 更新按钮状态
+        function updateButtons() {
+            const question = allQuestions[currentQuestionIndex];
+            const hasAnswer = isQuestionAnswered(question);
+            const isLast = currentQuestionIndex === allQuestions.length - 1;
+
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const submitBtn = document.getElementById('submit-btn');
+            
+            prevBtn.disabled = currentQuestionIndex === 0;
+            
+            if (isLast) {
+                nextBtn.classList.add('hidden');
+                submitBtn.classList.remove('hidden');
+                /* 不在此禁用提交：避免判题逻辑与本地数据边缘情况导致按钮无法点击；未完成时由点击校验提示 */
+                submitBtn.disabled = false;
+                submitBtn.setAttribute('aria-disabled', hasAnswer ? 'false' : 'true');
+            } else {
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+                submitBtn.removeAttribute('aria-disabled');
+                nextBtn.disabled = !hasAnswer;
+            }
+        }
+
+        // 上一题
+        document.getElementById('prev-btn').addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                saveProgress();
+                renderQuestion();
+                updateProgress();
+            }
+        });
+
+        // 下一题
+        document.getElementById('next-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('下一题按钮被点击', currentQuestionIndex);
+            
+            // 防止重复点击
+            if (isTransitioning) return;
+            
+            // 检查当前题是否已作答
+            const question = allQuestions[currentQuestionIndex];
+            if (!isQuestionAnswered(question)) {
+                alert('请先回答当前题目');
+                return;
+            }
+            
+            if (currentQuestionIndex < allQuestions.length - 1) {
+                isTransitioning = true; // 设置标志
+                currentQuestionIndex++;
+                saveProgress();
+                renderQuestion();
+                updateProgress();
+                // 短暂延迟后重置标志，防止快速连续点击
+                setTimeout(() => {
+                    isTransitioning = false;
+                }, 300);
+            }
+        });
+
+        // 提交
+        document.getElementById('submit-btn').addEventListener('click', () => {
+            const unanswered = allQuestions.filter(q => !isQuestionAnswered(q));
+            if (unanswered.length > 0) {
+                const sample = unanswered.slice(0, 5).map(q => q.question_id).join(', ');
+                alert(`还有 ${unanswered.length} 题未作答，请完成所有题目后再提交。\n未作答示例 ID：${sample}${unanswered.length > 5 ? '…' : ''}`);
+                return;
+            }
+
+            // 保存答案并跳转到结果页
+            StorageUtil.set(StorageKeys.USER_ANSWERS, answers);
+            window.location.href = getDeployPageUrl('result.html');
+        });
+
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', () => {
+            applyUIConfig();
+            loadQuizData().then(() => {
+                // 加载题库后开始答题
+            });
+            startCatAnimation(); // 启动小猫走路动画
+            
+            // 使用事件委托处理题目选项点击
+            document.getElementById('question-container').addEventListener('click', (e) => {
+                // 处理量表题选项
+                const scaleEl = e.target.closest('.scale-option');
+                if (scaleEl) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const value = parseInt(scaleEl.dataset.value, 10);
+                    if (Number.isNaN(value) || value < 1 || value > 5) return;
+                    selectScale(value);
+                    return;
+                }
+                
+                // 处理选择题选项
+                const choiceEl = e.target.closest('.choice-option');
+                if (choiceEl) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const option = choiceEl.dataset.option;
+                    console.log('选择题选项被点击:', option);
+                    toggleChoice(option);
+                }
+            });
+        });
+    </script>
+
+    <!-- 页脚 -->
+    <footer style="text-align: center; padding: 40px 20px; margin-top: 40px; background: linear-gradient(to bottom, transparent, rgba(196,149,106,0.06)); border-top: 1px solid rgba(196,149,106,0.12);">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0 0 8px;">
+                <span style="font-weight: 600; color: var(--primary-color);">心理测试</span> © 2026 起源研究社 Origin Lab
+            </p>
+            <p style="color: #aaa; font-size: 0.75rem; margin: 0; line-height: 1.6;">
+                保留所有权利 | 仅供娱乐参考，不构成专业建议
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

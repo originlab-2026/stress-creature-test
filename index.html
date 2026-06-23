@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="description" content="起源研究社心理测试 - 你的压力是哪种神秘生物？发现你内心压力的神秘化身">
+    <meta name="keywords" content="心理测试,压力测试,神秘生物,情绪外化,压力管理">
+    <title>起源研究社 - 你的压力是哪种神秘生物</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preload" as="image" href="assets/elements/压力生物首页.webp?v=5" type="image/webp">
+    <script src="js/deploy-config.js"></script>
+</head>
+<body class="page-home">
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">压力神秘生物</a>
+            <ul class="nav-links">
+                <li><a href="javascript:void(0)" class="active" onclick="navigateWithFallback('catalog', this)">测试合集</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="fade-in" style="margin: 0; text-align: center;">
+            <div style="width: 100%; max-width: 1024px; margin: 0 auto; border-radius: 0 0 24px 24px; overflow: hidden; line-height: 0; background: linear-gradient(135deg, #F0E4D0 0%, #C4956A 50%, #F0E4D0 100%);">
+                <picture>
+                    <source type="image/webp" srcset="assets/elements/压力生物首页.webp?v=5">
+                    <img src="assets/elements/压力生物首页.png?v=5" alt="你的压力是哪种神秘生物？" style="width: 100%; height: auto; display: block;" loading="eager" fetchpriority="high" decoding="async">
+                </picture>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: -24px 0 32px; position: relative; z-index: 10;">
+            <a href="quiz.html" id="start-btn" style="display: inline-block; line-height: 0; cursor: pointer; transition: transform 0.2s ease;">
+                <picture>
+                    <source type="image/webp" srcset="assets/elements/开始测试按钮.webp?v=5">
+                    <img src="assets/elements/开始测试按钮.png?v=5" alt="开始测试" style="max-width: 320px; width: 78%; height: auto; display: block; margin: 0 auto; filter: drop-shadow(0 6px 25px rgba(196, 149, 106, 0.4));" loading="eager" decoding="async">
+                </picture>
+            </a>
+        </div>
+
+        <div class="card fade-in home-surface-card" style="margin-top: 24px; padding: 28px;">
+            <p style="font-size: 0.95rem; line-height: 1.9; color: #333; margin: 0 0 16px; text-align: left;">
+                每个人心中都藏着一只<span style="color: #A67B4A; font-weight: 600;">神秘生物</span>——它不是你的敌人，而是你压力的化身。当你感到焦虑、疲惫、无力时，其实是一只小动物正在你心里筑巢。
+            </p>
+            <p style="font-size: 0.95rem; line-height: 1.9; color: #333; margin: 0 0 16px; text-align: left;">
+                本测试基于<span style="color: #A67B4A; font-weight: 600;">压力心理学的「情绪外化」理论</span>，将无形的压力具象为8种神秘生物。通过一系列情景选择，你会发现：你的压力长什么样？它有什么习性？最重要的是——如何驯服它。
+            </p>
+            <p style="font-size: 0.95rem; line-height: 1.8; color: #333; margin: 0; text-align: center; font-weight: 500;">
+                认识你的<span style="color: #A67B4A; font-weight: 600;">压力生物</span>，让看不见的情绪被看见、被理解、被温柔化解。
+            </p>
+        </div>
+
+        <div class="home-stats-strip" style="margin-top: 20px; padding: 18px 24px; border-radius: 16px; display: flex; justify-content: space-between; flex-wrap: wrap;">
+            <div style="flex: 1; text-align: center; position: relative;">
+                <div style="font-size: 0.75rem; color: #999; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px;">题目总数</div>
+                <span style="font-size: 1.4rem; color: #A67B4A; font-weight: 700;" id="question-count">-</span>
+                <span style="font-size: 0.85rem; color: #C4956A; font-weight: 500; margin-left: 2px;">题</span>
+            </div>
+            <div style="width: 1px; background: linear-gradient(to bottom, transparent, rgba(196,149,106,0.28), transparent); margin: 0 16px;"></div>
+            <div style="flex: 1; text-align: center;">
+                <div style="font-size: 0.75rem; color: #999; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px;">预计时长</div>
+                <span style="font-size: 1.4rem; color: #A67B4A; font-weight: 700;">2-3</span>
+                <span style="font-size: 0.85rem; color: #C4956A; font-weight: 500; margin-left: 2px;">分钟</span>
+            </div>
+        </div>
+
+        <div class="fade-in" style="margin-top: 28px;">
+            <h2 class="home-types-heading" style="text-align: center; font-size: 1.1rem; margin-bottom: 20px;">八种压力神秘生物</h2>
+            <div id="types-preview"></div>
+        </div>
+    </main>
+
+    <footer class="site-footer site-footer--home">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <p class="site-footer-line" style="font-size: 0.9rem; margin: 0 0 8px;">
+                <span class="site-footer-brand" style="font-weight: 600;">心理测试</span> © 2026 起源研究社 Origin Lab
+            </p>
+            <p class="site-footer-sub" style="font-size: 0.75rem; margin: 0; line-height: 1.6;">
+                保留所有权利 | 仅供娱乐参考，不构成专业建议
+            </p>
+        </div>
+    </footer>
+
+    <script src="js/utils.js"></script>
+    <script>
+        const DEFAULT_RESULT_TYPES_FALLBACK = [
+            { creature_name: '蜷缩刺猬', type_name: '防御型依恋', keywords: ['防御', '脆弱'], short_desc: ['「别碰我，我会扎人」', '「其实我只是害怕」'] },
+            { creature_name: '膨胀河豚', type_name: '紧绷型应激', keywords: ['紧绷', '易爆'], short_desc: ['「别再吹了，我快撑不住了」', '「一点就炸，炸完就瘪」'] },
+            { creature_name: '慢吞吞树懒', type_name: '耗竭型倦怠', keywords: ['拖延', '麻木'], short_desc: ['「等一下……再等一下……」', '「不是不想动，是动不了」'] },
+            { creature_name: '复读机鹦鹉', type_name: '反刍型焦虑', keywords: ['反刍', '焦虑'], short_desc: ['「万一……万一……万一……」', '「我知道不该想了，但我停不下来」'] },
+            { creature_name: '负重寄居蟹', type_name: '责任型超载', keywords: ['责任', '疲惫'], short_desc: ['「我不能放下，这是我的责任」', '「好累，但没有人可以接替我」'] },
+            { creature_name: '喷火小龙', type_name: '外爆型愤怒', keywords: ['易怒', '内耗'], short_desc: ['「别惹我，我在喷火」', '「其实烧得最痛的是我自己」'] },
+            { creature_name: '隐形变色龙', type_name: '隐匿型回避', keywords: ['压抑', '消失'], short_desc: ['「看不见我、看不见我、看不见我」', '「我存在，但我选择不存在」'] },
+            { creature_name: '碎碎念章鱼', type_name: '过载型混乱', keywords: ['过载', '混乱'], short_desc: ['「我在做A的时候在想B」', '「停下来？我没有这个选项」'] }
+        ];
+
+        const CREATURE_ASSET_VERSION = '5';
+
+        function creaturePreviewPictureHtml(creatureName) {
+            const enc = encodeURIComponent(creatureName);
+            const v = CREATURE_ASSET_VERSION;
+            const safeAlt = String(creatureName).replace(/"/g, '&quot;');
+            return '<picture><source type="image/webp" srcset="assets/persona/' + enc + '.webp?v=' + v + '">' +
+                '<img src="assets/persona/' + enc + '.png?v=' + v + '" alt="' + safeAlt + '" loading="lazy" decoding="async"></picture>';
+        }
+
+        async function loadQuizData() {
+            try {
+                let quizData = StorageUtil.get(StorageKeys.QUIZ_DATA);
+
+                if (quizData && !isStressCreatureQuizData(quizData)) {
+                    console.warn('首页：检测到非「压力神秘生物」题库缓存，已清空题库与答题进度');
+                    StorageUtil.remove(StorageKeys.QUIZ_DATA);
+                    StorageUtil.clearQuizProgress();
+                    quizData = null;
+                }
+
+                if (quizData && (!quizData.scale_questions || !quizData.choice_questions)) {
+                    StorageUtil.remove(StorageKeys.QUIZ_DATA);
+                    quizData = null;
+                }
+
+                if (!quizData) {
+                    try {
+                        const response = await fetch(resolveDeployPath('data/default-quiz.json') + '?v=' + Date.now());
+                        if (response.ok) {
+                            quizData = await response.json();
+                            StorageUtil.set(StorageKeys.QUIZ_DATA, quizData);
+                        }
+                    } catch (e) {
+                        console.warn('加载失败:', e);
+                    }
+                }
+
+                document.getElementById('question-count').textContent =
+                    (quizData && quizData.nbr_question) ? quizData.nbr_question : '30';
+
+                renderCreaturePreview(quizData);
+            } catch (error) {
+                console.error('加载测试数据失败:', error);
+                document.getElementById('question-count').textContent = '30';
+                renderCreaturePreview(null);
+            }
+        }
+
+        function renderCreaturePreview(quizData) {
+            const container = document.getElementById('types-preview');
+            const types = (quizData && quizData.result_types && quizData.result_types.length)
+                ? [...quizData.result_types]
+                : [...DEFAULT_RESULT_TYPES_FALLBACK];
+
+            const cardsHtml = types.map((type) => {
+                const pic = creaturePreviewPictureHtml(type.creature_name);
+                const keywords = (type.keywords || []).map(k => `<span class="creature-keyword">${k}</span>`).join('');
+                const desc = (type.short_desc || []).join(' ');
+                return `
+                    <div class="type-card">
+                        <div class="type-card-icon" style="background: #FAF3E8; box-shadow: 0 4px 14px rgba(0,0,0,0.07), inset 0 0 0 1px rgba(196,149,106,0.12);">
+                            ${pic}
+                        </div>
+                        <h3>${type.creature_name}</h3>
+                        <p class="creature-type-label">${type.type_name}</p>
+                        <div class="creature-keywords">${keywords}</div>
+                        <p class="creature-short-desc">${desc}</p>
+                    </div>`;
+            }).join('');
+
+            container.innerHTML = `
+                <style>
+                    .types-carousel { position: relative; overflow: hidden; padding: 0 40px; }
+                    .types-track { display: flex; gap: 16px; transition: transform 0.3s ease; }
+                    .type-card {
+                        flex: 0 0 calc(33.333% - 11px);
+                        background: white;
+                        border-radius: 20px;
+                        padding: 24px 18px;
+                        text-align: center;
+                        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+                        border: 1px solid #f0f0f0;
+                    }
+                    .type-card-icon {
+                        width: 100%;
+                        margin: 0 0 12px;
+                        border-radius: 18px;
+                        display: block;
+                        padding: 4px 0;
+                        box-sizing: border-box;
+                    }
+                    .type-card-icon img {
+                        width: 100%;
+                        height: auto;
+                        max-height: 180px;
+                        object-fit: contain;
+                        display: block;
+                        border-radius: 14px;
+                        margin: 0 auto;
+                    }
+                    .type-card h3 { margin: 0 0 6px; font-size: 1.05rem; color: #333; font-weight: 700; }
+                    .creature-type-label { margin: 0 0 10px; font-size: 0.8rem; color: #A67B4A; font-weight: 600; }
+                    .creature-keywords { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+                    .creature-keyword {
+                        font-size: 0.72rem;
+                        padding: 3px 10px;
+                        border-radius: 12px;
+                        background: #FAF3E8;
+                        color: #A67B4A;
+                        font-weight: 600;
+                    }
+                    .creature-short-desc {
+                        margin: 0;
+                        font-size: 0.78rem;
+                        color: #666;
+                        line-height: 1.55;
+                        text-align: center;
+                    }
+                    .carousel-btn {
+                        position: absolute; top: 50%; transform: translateY(-50%);
+                        width: 40px; height: 40px; background: white; border: none; border-radius: 50%;
+                        box-shadow: 0 2px 12px rgba(0,0,0,0.15); cursor: pointer;
+                        display: flex; align-items: center; justify-content: center; z-index: 10;
+                    }
+                    .carousel-btn:hover { background: #C4956A; color: white; }
+                    .carousel-btn.prev { left: 0; }
+                    .carousel-btn.next { right: 0; }
+                    .carousel-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+                    .carousel-dots { display: flex; justify-content: center; gap: 8px; margin-top: 20px; }
+                    .carousel-dot {
+                        width: 8px; height: 8px; border-radius: 50%; background: #ddd;
+                        cursor: pointer; transition: all 0.2s ease;
+                    }
+                    .carousel-dot.active { background: #C4956A; width: 24px; border-radius: 4px; }
+                    @media (max-width: 768px) {
+                        .types-carousel { padding: 0 32px; }
+                        .type-card { flex: 0 0 calc(50% - 8px); }
+                    }
+                    @media (max-width: 480px) {
+                        .types-carousel { padding: 0 24px; }
+                        .type-card { flex: 0 0 100%; }
+                    }
+                </style>
+                <div class="types-carousel">
+                    <button class="carousel-btn prev" onclick="moveCarousel(-1)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    </button>
+                    <div class="types-track" id="typesTrack">${cardsHtml}</div>
+                    <button class="carousel-btn next" onclick="moveCarousel(1)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </button>
+                </div>
+                <div class="carousel-dots" id="carouselDots"></div>
+            `;
+            initCarousel();
+        }
+
+        let currentSlide = 0;
+        let totalSlides = 0;
+        let itemsPerView = 3;
+
+        function updateItemsPerView() {
+            if (window.innerWidth <= 480) itemsPerView = 1;
+            else if (window.innerWidth <= 768) itemsPerView = 2;
+            else itemsPerView = 3;
+        }
+
+        function initCarousel() {
+            updateItemsPerView();
+            const track = document.getElementById('typesTrack');
+            const dotsContainer = document.getElementById('carouselDots');
+            if (!track || !dotsContainer) return;
+
+            const cards = track.querySelectorAll('.type-card');
+            totalSlides = Math.ceil(cards.length / itemsPerView);
+            currentSlide = 0;
+
+            dotsContainer.innerHTML = '';
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+                dot.onclick = () => goToSlide(i);
+                dotsContainer.appendChild(dot);
+            }
+
+            updateCarousel();
+
+            window.addEventListener('resize', () => {
+                const oldItemsPerView = itemsPerView;
+                updateItemsPerView();
+                if (oldItemsPerView !== itemsPerView) {
+                    totalSlides = Math.ceil(cards.length / itemsPerView);
+                    currentSlide = Math.min(currentSlide, totalSlides - 1);
+                    dotsContainer.innerHTML = '';
+                    for (let i = 0; i < totalSlides; i++) {
+                        const dot = document.createElement('div');
+                        dot.className = 'carousel-dot' + (i === currentSlide ? ' active' : '');
+                        dot.onclick = () => goToSlide(i);
+                        dotsContainer.appendChild(dot);
+                    }
+                    updateCarousel();
+                }
+            });
+        }
+
+        function moveCarousel(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+            updateCarousel();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateCarousel();
+        }
+
+        function updateCarousel() {
+            const track = document.getElementById('typesTrack');
+            const prevBtn = document.querySelector('.carousel-btn.prev');
+            const nextBtn = document.querySelector('.carousel-btn.next');
+            const dots = document.querySelectorAll('.carousel-dot');
+            if (!track) return;
+
+            const cardWidth = track.querySelector('.type-card')?.offsetWidth || 0;
+            const gap = 16;
+            const offset = currentSlide * (cardWidth + gap) * itemsPerView;
+            track.style.transform = `translateX(-${offset}px)`;
+
+            if (prevBtn) prevBtn.disabled = currentSlide === 0;
+            if (nextBtn) nextBtn.disabled = currentSlide === totalSlides - 1;
+            dots.forEach((dot, index) => dot.classList.toggle('active', index === currentSlide));
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            applyUIConfig();
+            loadQuizData();
+            preloadPlatformChecks();
+            const startBtn = document.getElementById('start-btn');
+            if (startBtn) {
+                startBtn.href = getDeployPageUrl('quiz.html');
+            }
+        });
+    </script>
+</body>
+</html>
