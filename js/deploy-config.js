@@ -42,6 +42,10 @@ const DEPLOY_CONFIG = {
             cloudflare: 'https://stress-creature-test.pages.dev/',
             github: 'https://originlab-2026.github.io/stress-creature-test/'
         },
+        perfectCity: {
+            cloudflare: 'https://perfect-city-test.pages.dev/',
+            github: 'https://originlab-2026.github.io/perfect-city-test/'
+        },
         catalog: {
             cloudflare: 'https://test-catalog.pages.dev/',
             github: 'https://originlab-2026.github.io/test-catalog/'
