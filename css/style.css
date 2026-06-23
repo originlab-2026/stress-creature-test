@@ -1097,13 +1097,13 @@ _:future,
     }
 }
 
-/* ========== 压力神秘生物首页：主区 #C4956A 与暖底上的可读性 ========== */
+/* ========== 压力神秘生物首页：与答题页一致的 #fdf8ef 背景 ========== */
 body.page-home {
-    background-color: #C4956A;
+    background-color: var(--background-color);
 }
 
 body.page-home main.container {
-    background-color: #C4956A;
+    background-color: var(--background-color);
     padding-top: 8px;
     padding-bottom: 36px;
 }
@@ -1114,27 +1114,27 @@ body.page-home .navbar {
 }
 
 body.page-home .home-surface-card.card {
-    background: rgba(255, 255, 255, 0.97);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    background: var(--white);
+    border: 1px solid rgba(196, 149, 106, 0.12);
+    box-shadow: var(--shadow);
 }
 
 body.page-home .home-stats-strip {
-    background: rgba(255, 255, 255, 0.94);
-    border: 1px solid rgba(255, 255, 255, 0.45);
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+    background: var(--white);
+    border: 1px solid rgba(196, 149, 106, 0.12);
+    box-shadow: var(--shadow);
 }
 
 body.page-home .home-types-heading {
-    color: rgba(255, 255, 255, 0.96);
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+    color: var(--text-color);
+    text-shadow: none;
     font-weight: 600;
 }
 
 body.page-home #types-preview .type-card {
-    background: rgba(255, 255, 255, 0.98);
-    border: 1px solid rgba(255, 255, 255, 0.45);
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+    background: var(--white);
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 body.page-home #types-preview .carousel-btn {
@@ -1142,30 +1142,30 @@ body.page-home #types-preview .carousel-btn {
 }
 
 body.page-home #types-preview .carousel-dot {
-    background: rgba(255, 255, 255, 0.35);
+    background: #ddd;
 }
 
 body.page-home #types-preview .carousel-dot.active {
-    background: #f5fad8;
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.5);
+    background: var(--primary-color);
+    box-shadow: none;
 }
 
 body.page-home .site-footer.site-footer--home {
     margin-top: 0;
     padding: 36px 20px 40px;
     text-align: center;
-    background: #A67B4A;
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    background: linear-gradient(to bottom, transparent, rgba(196, 149, 106, 0.06));
+    border-top: 1px solid rgba(196, 149, 106, 0.12);
 }
 
 body.page-home .site-footer-line {
-    color: rgba(255, 255, 255, 0.92);
+    color: var(--text-secondary);
 }
 
 body.page-home .site-footer-brand {
-    color: #e8f5c4;
+    color: var(--primary-dark);
 }
 
 body.page-home .site-footer-sub {
-    color: rgba(255, 255, 255, 0.72);
+    color: #999;
 }
