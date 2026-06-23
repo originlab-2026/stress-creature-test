@@ -463,7 +463,8 @@
                 if (answer) {
                     const selectedOptions = Array.isArray(answer) ? answer : [answer];
                     selectedOptions.forEach(opt => {
-                        const dimId = q[`option_${opt}_dim`];
+                        const optKey = String(opt).toLowerCase();
+                        const dimId = q[`option_${optKey}_dim`];
                         if (dimId && dimensionScores[dimId]) {
                             dimensionScores[dimId].score += 1;
                             dimensionScores[dimId].count += 1;
@@ -481,6 +482,48 @@
                 dim.maxScore = 30;
                 dim.percentage = dim.maxScore > 0 ? (dim.score / dim.maxScore) : 0;
             });
+        }
+
+        // 构建与 ideal_scores（约 1–6 分）同量纲的维度向量，用于类型匹配
+        function getDimensionMatchScores() {
+            const scores = {};
+            if (!quizData || !quizData.dimensions) return scores;
+
+            quizData.dimensions.forEach(dim => {
+                const dimId = dim.dimension_id;
+                let scaleSum = 0;
+                let scaleCount = 0;
+                let choiceCount = 0;
+
+                (quizData.scale_questions || []).forEach(q => {
+                    if (q.dimension_id !== dimId) return;
+                    let answer = answers[q.question_id];
+                    if (answer === undefined || answer === null) return;
+                    answer = Number(answer);
+                    if (Number.isNaN(answer)) return;
+                    if (q.reverse) answer = 6 - answer;
+                    scaleSum += answer;
+                    scaleCount += 1;
+                });
+
+                (quizData.choice_questions || []).forEach(q => {
+                    const answer = answers[q.question_id];
+                    if (!answer) return;
+                    const selected = Array.isArray(answer) ? answer : [answer];
+                    selected.forEach(opt => {
+                        const optKey = String(opt).toLowerCase();
+                        if (q[`option_${optKey}_dim`] === dimId) {
+                            choiceCount += 1;
+                        }
+                    });
+                });
+
+                const scaleAvg = scaleCount > 0 ? scaleSum / scaleCount : 3;
+                // 量表均分(1-5) + 选择题命中加成(0-1)，与文档 ideal_scores 量纲一致
+                scores[dimId] = scaleAvg + choiceCount / 5;
+            });
+
+            return scores;
         }
 
         // 计算欧氏距离
@@ -503,7 +546,8 @@
                 if (!answer) return;
                 const selected = Array.isArray(answer) ? answer : [answer];
                 selected.forEach(opt => {
-                    const dimId = q[`option_${opt}_dim`];
+                    const optKey = String(opt).toLowerCase();
+                    const dimId = q[`option_${optKey}_dim`];
                     if (dimId && freq[dimId] !== undefined) freq[dimId] += 1;
                 });
             });
@@ -514,10 +558,7 @@
         function matchPersonaType() {
             if (!quizData || !quizData.result_types) return null;
 
-            const userScores = {};
-            Object.keys(dimensionScores).forEach(key => {
-                userScores[key] = dimensionScores[key].score;
-            });
+            const userScores = getDimensionMatchScores();
 
             const candidates = [];
             let bestDistance = Infinity;
