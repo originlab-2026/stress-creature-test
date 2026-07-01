@@ -83,24 +83,6 @@
             return arr;
         }
 
-        const CHOICE_OPTION_LETTERS = new Set(['a', 'b', 'c', 'd', 'e']);
-
-        /** 选择题答案统一为小写选项字母数组；无法识别则 null */
-        function normalizeChoiceAnswerValue(raw) {
-            if (raw === undefined || raw === null) return null;
-            let arr = raw;
-            if (typeof arr === 'string' && arr.trim().length) {
-                arr = [arr];
-            }
-            if (!Array.isArray(arr)) return null;
-            const cleaned = [...new Set(
-                arr
-                    .map(v => (typeof v === 'string' ? v.trim().toLowerCase() : ''))
-                    .filter(v => CHOICE_OPTION_LETTERS.has(v))
-            )];
-            return cleaned.length > 0 ? cleaned : null;
-        }
-
         /** 量表题：1–5；选择题：至少一项合法选项 */
         function isQuestionAnswered(question) {
             const answer = answers[question.question_id];
