@@ -447,7 +447,9 @@
             // 计算量表题得分（含反向题处理）
             quizData.scale_questions.forEach(q => {
                 let answer = answers[q.question_id];
-                if (answer) {
+                if (answer !== undefined && answer !== null) {
+                    answer = Number(answer);
+                    if (Number.isNaN(answer)) return;
                     // 反向题：6 - 原始分
                     if (q.reverse) {
                         answer = 6 - answer;
@@ -473,56 +475,21 @@
                 }
             });
 
-            // 计算每个维度的平均分和百分比
-            // 量表题每维度5题(满分25) + 选择题最大5分 = 理论最高30分
-            // 但用原始总分做欧氏距离，百分比仅用于展示
+            // 计算每个维度的百分比（量表满分25 + 选择题最大5 = 30）
             Object.keys(dimensionScores).forEach(key => {
                 const dim = dimensionScores[key];
-                // 百分比基于量表题满分25+选择题满分5=30
                 dim.maxScore = 30;
                 dim.percentage = dim.maxScore > 0 ? (dim.score / dim.maxScore) : 0;
             });
         }
 
-        // 构建与 ideal_scores（约 1–6 分）同量纲的维度向量，用于类型匹配
+        // 与 calculateResults 同量纲的维度百分比向量（0–1），用于欧氏距离匹配
         function getDimensionMatchScores() {
             const scores = {};
-            if (!quizData || !quizData.dimensions) return scores;
-
-            quizData.dimensions.forEach(dim => {
-                const dimId = dim.dimension_id;
-                let scaleSum = 0;
-                let scaleCount = 0;
-                let choiceCount = 0;
-
-                (quizData.scale_questions || []).forEach(q => {
-                    if (q.dimension_id !== dimId) return;
-                    let answer = answers[q.question_id];
-                    if (answer === undefined || answer === null) return;
-                    answer = Number(answer);
-                    if (Number.isNaN(answer)) return;
-                    if (q.reverse) answer = 6 - answer;
-                    scaleSum += answer;
-                    scaleCount += 1;
-                });
-
-                (quizData.choice_questions || []).forEach(q => {
-                    const answer = answers[q.question_id];
-                    if (!answer) return;
-                    const selected = Array.isArray(answer) ? answer : [answer];
-                    selected.forEach(opt => {
-                        const optKey = String(opt).toLowerCase();
-                        if (q[`option_${optKey}_dim`] === dimId) {
-                            choiceCount += 1;
-                        }
-                    });
-                });
-
-                const scaleAvg = scaleCount > 0 ? scaleSum / scaleCount : 3;
-                // 量表均分(1-5) + 选择题命中加成(0-1)，与文档 ideal_scores 量纲一致
-                scores[dimId] = scaleAvg + choiceCount / 5;
+            if (!dimensionScores) return scores;
+            Object.keys(dimensionScores).forEach(dimId => {
+                scores[dimId] = dimensionScores[dimId].percentage;
             });
-
             return scores;
         }
 
@@ -1547,7 +1514,14 @@
 
             // 获取答案
             answers = pruneUserAnswersForQuiz(StorageUtil.get(StorageKeys.USER_ANSWERS, {}), quizData);
-            
+
+            const missingAnswers = getMissingAnswerIds(quizData, answers);
+            if (missingAnswers.length > 0) {
+                alert(`还有 ${missingAnswers.length} 题未作答，请完成所有题目后再查看结果。`);
+                window.location.href = getDeployPageUrl('quiz.html');
+                return;
+            }
+
             if (Object.keys(answers).length === 0) {
                 alert('请先完成测试');
                 window.location.href = getDeployPageUrl('quiz.html');
